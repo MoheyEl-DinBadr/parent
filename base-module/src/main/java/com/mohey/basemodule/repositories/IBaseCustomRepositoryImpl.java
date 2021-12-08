@@ -3,6 +3,9 @@ package com.mohey.basemodule.repositories;
 import com.mohey.basemodule.filter.BaseFilter;
 import com.mohey.basemodule.model.BaseModel;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,16 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Slf4j
 public abstract class IBaseCustomRepositoryImpl<Model extends BaseModel, Filter extends BaseFilter>
         implements IBaseCustomRepository<Model, Filter> {
 
+    @Autowired
     public ReactiveMongoTemplate reactiveMongoTemplate;
 
     @Override
     public Flux<Model> queryForFilter(Filter filter) {
         return this.reactiveMongoTemplate.aggregateAndReturn(this.getClassFromLookup())
                 .by(Aggregation.newAggregation(this.getClassFromLookup(), this.buildQueryForFilter(filter)))
-                .all();
+                .all()
+                .onErrorContinue(IllegalArgumentException.class, (throwable, o) -> this.reactiveMongoTemplate.findAll(this.getClassFromLookup()));
     }
 
     @Override

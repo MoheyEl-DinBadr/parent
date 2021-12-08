@@ -1,7 +1,5 @@
 package com.mohey.basemodule.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,9 +20,6 @@ public interface ReactiveConverter {
 
     @Service
     class ReactiveConverterImpl implements ReactiveConverter {
-
-        @Autowired
-        protected ReactiveMongoTemplate transactionTemplate;
 
         @Override
         public <Model> Mono<Model> wrapToMonoDBOperation(Supplier<Model> supplier) {

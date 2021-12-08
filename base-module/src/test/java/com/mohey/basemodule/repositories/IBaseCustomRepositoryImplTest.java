@@ -73,7 +73,6 @@ class IBaseCustomRepositoryImplTest {
                 .thenReturn(Flux.fromIterable(List.of(mockClass2)));
         this.mockClassCustomRepo.queryForFilter(mockFilter)
                 .doOnNext(mockClass -> {
-                    System.out.println("mockClass.getData() = " + mockClass.getData());
                     assertEquals(mockClass.getData(), "Test2");
                 }).blockFirst();
     }

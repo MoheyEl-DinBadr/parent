@@ -1,4 +1,4 @@
-package com.mohey.basemodule.repositories;
+package com.mohey.basemongo.repositories;
 
 import com.mohey.commonmodel.filter.BaseFilter;
 import com.mohey.commonmodel.model.BaseModel;
@@ -39,24 +39,25 @@ class IBaseCustomRepositoryImplTest {
     private void initData() {
         var mockClass1 = new MockClass();
         mockClass1.setData("Test1");
-        this.reactiveMongoTemplate.insert(mockClass1).block();
+        mockClass1 = this.reactiveMongoTemplate.insert(mockClass1).block();
         var mockClass2 = new MockClass();
         mockClass2.setData("Test2");
-        this.reactiveMongoTemplate.insert(mockClass2).block();
+       mockClass2 = this.reactiveMongoTemplate.insert(mockClass2).block();
         var mockClass3 = new MockClass();
         mockClass3.setData("Test3");
-        this.reactiveMongoTemplate.insert(mockClass3).block();
+        mockClass3 = this.reactiveMongoTemplate.insert(mockClass3).block();
         var mockClass4 = new MockClass();
         mockClass4.setData("Test4");
-        this.reactiveMongoTemplate.insert(mockClass4).block();
+        mockClass4 = this.reactiveMongoTemplate.insert(mockClass4).block();
         var mockClass5 = new MockClass();
         mockClass5.setData("Test5");
-        this.reactiveMongoTemplate.insert(mockClass5).block();
+        mockClass5 = this.reactiveMongoTemplate.insert(mockClass5).block();
         var mockClass6 = new MockClass();
         mockClass6.setData("Test6");
-        this.reactiveMongoTemplate.insert(mockClass6).block();
+        mockClass6 = this.reactiveMongoTemplate.insert(mockClass6).block();
         var mockClass = new MockClass();
         mockClass.setData("Test7");
+        mockClass.setMockClass(mockClass6);
         this.reactiveMongoTemplate.insert(mockClass).block();
     }
 
@@ -92,6 +93,7 @@ class IBaseCustomRepositoryImplTest {
 @Data
 class MockClass extends BaseModel {
     private String data;
+    private MockClass mockClass;
 
     public MockClass() {
     }

@@ -1,4 +1,4 @@
-package com.mohey.basemodule;
+package com.mohey.basemongo;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

@@ -1,9 +1,10 @@
-package com.mohey.basemodule.controllers;
+package com.mohey.commonmodel.controllers;
 
 import com.mohey.commonmodel.filter.BaseFilter;
 import com.mohey.commonmodel.model.BaseModel;
 import com.mohey.commonmodel.model.BaseModelDto;
 import com.mohey.commonmodel.service.IBaseCustomService;
+import com.mohey.commonmodel.service.ReactiveConverter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
@@ -18,10 +19,12 @@ public abstract class CustomBaseController<Model extends BaseModel,
         extends BaseController<Model, ModelDto, ModelPostDto, ModelUpdateDto, BaseCustomService> {
 
     protected final BaseCustomService service;
+    protected final ReactiveConverter reactiveConverter;
 
-    public CustomBaseController(BaseCustomService service) {
-        super(service);
+    public CustomBaseController(BaseCustomService service, ReactiveConverter reactiveConverter) {
+        super(service, reactiveConverter);
         this.service = service;
+        this.reactiveConverter = reactiveConverter;
     }
 
     @PostMapping("/find/filter")

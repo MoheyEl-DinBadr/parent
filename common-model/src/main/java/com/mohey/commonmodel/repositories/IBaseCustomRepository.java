@@ -1,4 +1,4 @@
-package com.mohey.basemodule.repositories;
+package com.mohey.commonmodel.repositories;
 
 import com.mohey.commonmodel.filter.BaseFilter;
 import com.mohey.commonmodel.model.BaseModel;

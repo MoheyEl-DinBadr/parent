@@ -1,4 +1,4 @@
-package com.mohey.basemodule.repositories;
+package com.mohey.basemongo.repositories;
 
 import com.mohey.commonmodel.model.BaseModel;
 import org.springframework.data.domain.Pageable;

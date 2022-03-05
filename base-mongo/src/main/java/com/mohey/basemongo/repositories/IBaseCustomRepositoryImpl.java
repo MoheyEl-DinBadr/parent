@@ -1,7 +1,8 @@
-package com.mohey.basemodule.repositories;
+package com.mohey.basemongo.repositories;
 
 import com.mohey.commonmodel.filter.BaseFilter;
 import com.mohey.commonmodel.model.BaseModel;
+import com.mohey.commonmodel.repositories.IBaseCustomRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

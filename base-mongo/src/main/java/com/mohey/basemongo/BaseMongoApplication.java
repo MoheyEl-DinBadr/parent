@@ -1,4 +1,4 @@
-package com.mohey.basemodule;
+package com.mohey.basemongo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,10 +12,10 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 
 @SpringBootApplication
 @EnableTransactionManagement
-public class BaseModuleApplication {
+public class BaseMongoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BaseModuleApplication.class, args);
+        SpringApplication.run(BaseMongoApplication.class, args);
     }
 
 

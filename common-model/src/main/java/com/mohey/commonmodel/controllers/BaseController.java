@@ -1,10 +1,9 @@
-package com.mohey.basemodule.controllers;
+package com.mohey.commonmodel.controllers;
 
 import com.mohey.commonmodel.model.BaseModel;
 import com.mohey.commonmodel.model.BaseModelDto;
 import com.mohey.commonmodel.service.IBaseService;
 import com.mohey.commonmodel.service.ReactiveConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +20,12 @@ public abstract class BaseController<Model extends BaseModel,
         BaseService extends IBaseService<Model>> {
 
     protected final BaseService service;
-    @Autowired
-    protected ReactiveConverter reactiveConverter;
 
-    public BaseController(BaseService service) {
+    protected final ReactiveConverter reactiveConverter;
+
+    public BaseController(BaseService service, ReactiveConverter reactiveConverter) {
         this.service = service;
+        this.reactiveConverter = reactiveConverter;
     }
 
     @GetMapping("/{id}")
@@ -47,7 +47,7 @@ public abstract class BaseController<Model extends BaseModel,
 
         Flux<Model> dataPageable = this.service.findAllPageable(PageRequest.of(pageNumber, pageSize,
                 direction.matches("i(.*)asc(.*)") ? Sort.Direction.ASC : Sort.Direction.DESC,
-                properties.toArray(new String[properties.size()])));
+                properties.toArray(new String[0])));
 
         return this.manipulateModelBeforeBecomingDto(dataPageable);
     }

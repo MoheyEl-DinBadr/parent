@@ -1,10 +1,10 @@
-package com.mohey.basemodule.service.impl;
+package com.mohey.basemongo.service.impl;
 
 import com.mohey.commonmodel.filter.BaseFilter;
-import com.mohey.basemodule.repositories.IBaseCustomRepository;
-import com.mohey.basemodule.repositories.IBaseRepository;
+import com.mohey.basemongo.repositories.IBaseRepository;
 import com.mohey.commonmodel.model.BaseModel;
 import com.mohey.commonmodel.model.mapper.ModelMapper;
+import com.mohey.commonmodel.repositories.IBaseCustomRepository;
 import com.mohey.commonmodel.service.IBaseCustomService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

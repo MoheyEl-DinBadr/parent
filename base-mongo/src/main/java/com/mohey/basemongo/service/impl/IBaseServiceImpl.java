@@ -1,21 +1,20 @@
-package com.mohey.basemodule.service.impl;
+package com.mohey.basemongo.service.impl;
 
-import com.mohey.basemodule.repositories.IBaseRepository;
+import com.mohey.basemongo.repositories.IBaseRepository;
 import com.mohey.commonmodel.model.BaseModel;
 import com.mohey.commonmodel.model.mapper.ModelMapper;
 import com.mohey.commonmodel.service.IBaseService;
 import com.mohey.commonmodel.service.ReactiveConverter;
 import lombok.Data;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import reactor.util.function.Tuple2;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -53,11 +52,7 @@ public abstract class IBaseServiceImpl<Model extends BaseModel,
 
     @Override
     public Flux<Model> fetchAllByIds(List<String> ids) {
-        return Flux.fromIterable(ids)
-                .map(id -> this.repository.findById(id))
-                .collectList()
-                .flatMapMany(monos -> Mono.zip(monos, objects -> Arrays.stream(objects).map(o -> (Model) o).toList())
-                        .flatMapMany(Flux::fromIterable));
+        return this.repository.findAllById(ids);
     }
 
     @Override
@@ -73,27 +68,23 @@ public abstract class IBaseServiceImpl<Model extends BaseModel,
     @Override
     @Transactional
     public Flux<Model> addMany(Flux<Model> models) {
-
-        return models
-                .map(model -> Mono.zip(this.doBeforeAddOrUpdate(model), this.doAfterAdd(model)).flatMap(objects -> this.beforeSaveValidations(model, true)))
-                .collectList()
-                .flatMap(monos -> Mono.zip(monos, objects -> Arrays.stream(objects).map(o -> (Model) o).toList()))
-                .flatMapMany(this.repository::saveAll)
-                .concatMap(model -> Mono.zip(this.doAfterAdd(model), this.doAfterAddOrUpdate(model))
+        return this.repository.saveAll(models.subscribeOn(Schedulers.boundedElastic())
+                        .flatMap(model -> Mono.zip(this.doBeforeAddOrUpdate(model), this.doAfterAdd(model))
+                                .flatMap(objects -> this.beforeSaveValidations(model, true)).thenReturn(model))
+                )
+                .flatMap(model -> Mono.zip(this.doAfterAdd(model), this.doAfterAddOrUpdate(model))
                         .thenReturn(model)
                 );
-
     }
 
     @Override
     @Transactional
     public Flux<Model> updateMany(Flux<Model> models) {
-        return models
-                .map(model -> Mono.zip(this.doBeforeAddOrUpdate(model), this.doBeforeUpdate(model)).flatMap(objects -> this.beforeSaveValidations(model, false)))
-                .collectList()
-                .flatMap(monos -> Mono.zip(monos, objects -> Arrays.stream(objects).map(o -> (Model) o).toList()))
-                .flatMapMany(this.repository::saveAll)
-                .concatMap(model -> Mono.zip(this.doAfterAddOrUpdate(model), this.doBeforeUpdate(model))
+        return this.repository.saveAll(models.subscribeOn(Schedulers.boundedElastic())
+                        .flatMap(model -> Mono.zip(this.doBeforeAddOrUpdate(model), this.doBeforeUpdate(model))
+                                .flatMap(objects -> this.beforeSaveValidations(model, false).thenReturn(model)))
+                )
+                .flatMap(model -> Mono.zip(this.doAfterAddOrUpdate(model), this.doBeforeUpdate(model))
                         .thenReturn(model)
                 );
     }

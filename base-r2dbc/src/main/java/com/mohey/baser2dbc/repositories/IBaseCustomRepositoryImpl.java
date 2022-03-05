@@ -1,4 +1,4 @@
-package com.mohey.basemongo.repositories;
+package com.mohey.baser2dbc.repositories;
 
 import com.mohey.commonmodel.filter.BaseFilter;
 import com.mohey.commonmodel.model.BaseModel;
@@ -7,63 +7,39 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.repository.support.ReactiveQuerydslMongoPredicateExecutor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Slf4j
-public abstract class IBaseCustomRepositoryImpl<Model extends BaseModel, Filter extends BaseFilter>
+public abstract class IBaseCustomRepositoryImpl<Model extends BaseModel, Filter extends BaseFilter, BaseRepository extends IBaseRepository<Model>>
         implements IBaseCustomRepository<Model, Filter> {
 
     @Autowired
-    public ReactiveMongoTemplate reactiveMongoTemplate;
+    public BaseRepository repository;
+
 
     @Override
     public Flux<Model> queryForFilter(Filter filter) {
-        return this.reactiveMongoTemplate.aggregateAndReturn(this.getClassFromLookup())
-                .by(Aggregation.newAggregation(this.getClassFromLookup(), this.buildQueryForFilter(filter)))
-                .all()
-                .onErrorContinue(IllegalArgumentException.class, (throwable, o) -> this.reactiveMongoTemplate.findAll(this.getClassFromLookup()));
+        return null;
     }
 
     @Override
     public Flux<Model> queryForFilterAndSort(Filter filter, Sort sort) {
-        return this.reactiveMongoTemplate.aggregateAndReturn(this.getClassFromLookup())
-                .by(Aggregation.newAggregation(this.getClassFromLookup(), this.buildQueryForSortAndFilter(filter, sort)))
-                .all();
+        return null;
     }
 
     @Override
     public Mono<Page<Model>> queryForFilterPageable(Filter filter, Pageable pageable) {
-        List<AggregationOperation> countOperations = this.buildQueryForFilter(filter);
-        countOperations.add(Aggregation.group("_id").count().as("count"));
-        return Mono.zip(this.reactiveMongoTemplate.aggregateAndReturn(this.getClassFromLookup())
-                                .by(Aggregation.newAggregation(this.getClassFromLookup(),this.buildQueryForFilterPageable(filter, pageable)))
-                                .all().collectList(),
-                        this.reactiveMongoTemplate.aggregate(Aggregation.newAggregation(this.getClassFromLookup(), countOperations), this.getClassFromLookup(), Long.class).next())
-                .map(objects -> new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
+        return null;
     }
 
-    private List<AggregationOperation> buildQueryForFilterPageable(Filter filter, Pageable pageable) {
-        List<AggregationOperation> aggregationOperations = this.buildQueryForFilter(filter);
-        aggregationOperations.add(Aggregation.skip(pageable.getOffset()));
-        aggregationOperations.add(Aggregation.limit(pageable.getPageSize()));
-        return aggregationOperations;
-    }
 
-    protected List<AggregationOperation> buildQueryForFilter(Filter filter) {
-        List<AggregationOperation> aggregationOperations = new ArrayList<>();
+    /*protected void buildQueryForFilter(Filter filter) {
+
 
         if (filter.getId() != null)
             aggregationOperations.add(Aggregation.match(Criteria.where("_id").is(filter.getId())));
@@ -97,10 +73,10 @@ public abstract class IBaseCustomRepositoryImpl<Model extends BaseModel, Filter 
             aggregationOperations.add(Aggregation.limit(filter.getLimit()));
 
         return aggregationOperations;
-    }
+    }*/
 
 
-    private List<AggregationOperation> buildQueryForSortAndFilter(Filter filter, Sort sort) {
+    /*private List<AggregationOperation> buildQueryForSortAndFilter(Filter filter, Sort sort) {
         List<AggregationOperation> aggregationOperations = null;
         if (filter != null)
             aggregationOperations = this.buildQueryForFilter(filter);
@@ -113,7 +89,5 @@ public abstract class IBaseCustomRepositoryImpl<Model extends BaseModel, Filter 
 
 
         return aggregationOperations == null ? new ArrayList<>() : aggregationOperations;
-    }
-
-
+    }*/
 }

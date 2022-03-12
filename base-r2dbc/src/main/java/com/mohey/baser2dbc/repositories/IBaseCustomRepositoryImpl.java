@@ -1,93 +1,107 @@
 package com.mohey.baser2dbc.repositories;
 
+import com.mohey.baser2dbc.model.BaseSQLModel;
+import com.mohey.baser2dbc.model.QBaseSQLModel;
 import com.mohey.commonmodel.filter.BaseFilter;
-import com.mohey.commonmodel.model.BaseModel;
 import com.mohey.commonmodel.repositories.IBaseCustomRepository;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.sql.SQLQuery;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.Objects;
 
 
 @Data
 @Slf4j
-public abstract class IBaseCustomRepositoryImpl<Model extends BaseModel, Filter extends BaseFilter, BaseRepository extends IBaseRepository<Model>>
+public abstract class IBaseCustomRepositoryImpl<Model extends BaseSQLModel, Filter extends BaseFilter, BaseRepository extends IBaseRepository<Model>>
         implements IBaseCustomRepository<Model, Filter> {
 
     @Autowired
     public BaseRepository repository;
 
+    public <S extends QBaseSQLModel> S getPathToEntity() {
+        return (S) QBaseSQLModel.baseSQLModel;
+    }
+
 
     @Override
     public Flux<Model> queryForFilter(Filter filter) {
-        return null;
+        return this.repository.query(sqlQuery -> this.buildQueryForFilter(filter, sqlQuery)).all().cast(this.getClassFromLookup());
     }
 
     @Override
     public Flux<Model> queryForFilterAndSort(Filter filter, Sort sort) {
-        return null;
+        return this.repository.query(sqlQuery -> this.buildQueryForSortAndFilter(filter, sort, sqlQuery)
+        ).all().cast(this.getClassFromLookup());
     }
 
     @Override
-    public Mono<Page<Model>> queryForFilterPageable(Filter filter, Pageable pageable) {
-        return null;
+    public Flux<Model> queryForFilterPageable(Filter filter, Pageable pageable) {
+        return this.repository.query(sqlQuery -> this.buildQueryForSortAndFilter(filter, pageable.getSort(), sqlQuery)
+                        .offset(pageable.getOffset()).limit(pageable.getPageSize()))
+                .all().cast(this.getClassFromLookup());
     }
 
+    private <E> SQLQuery<E> buildQueryForSortAndFilter(Filter filter, Sort sort, SQLQuery<E> query) {
+        query = this.buildQueryForFilter(filter, query)
+                .orderBy(sort.stream().map(order -> {
+                            Path<Model> fieldPath = Expressions.path(
+                                    this.getClassFromLookup(),
+                                    this.getPathToEntity(),
+                                    order.getProperty());
+                            Order orderType = Order.ASC;
+                            if (order.isDescending())
+                                orderType = Order.DESC;
 
-    /*protected void buildQueryForFilter(Filter filter) {
+                            return new OrderSpecifier(orderType, fieldPath);
+                        }).toArray(OrderSpecifier[]::new)
+                );
+        return query;
+    }
 
+    protected <E> SQLQuery<E> buildQueryForFilter(Filter filter, SQLQuery<E> query) {
+        var entity = QBaseSQLModel.baseSQLModel;
 
-        if (filter.getId() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("_id").is(filter.getId())));
-        if (filter.getExcludedIds() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("_id").nin(filter.getExcludedIds())));
-        if (filter.getIncludedIds() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("_id").in(filter.getIncludedIds())));
-        if (filter.getCreatedOnEq() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("createdOn").is(filter.getCreatedOnEq())));
-        if (filter.getCreatedOnGt() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("createdOn").gt(filter.getCreatedOnGt())));
-        if (filter.getCreatedOnLt() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("createdOn").lt(filter.getCreatedOnLt())));
-        if (filter.getCreatedOnGoE() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("createdOn").gte(filter.getCreatedOnGoE())));
-        if (filter.getCreatedOnLoE() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("createdOn").lte(filter.getCreatedOnLoE())));
+        if (Objects.nonNull(filter.getId()))
+            query = query.where(entity.id.eq(filter.getId()));
+        if (Objects.nonNull(filter.getIncludedIds()))
+            query = query.where(entity.id.in(filter.getIncludedIds()));
+        if (Objects.nonNull(filter.getExcludedIds()))
+            query = query.where(entity.id.notIn(filter.getExcludedIds()));
 
-        if (filter.getUpdatedOnEq() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("updatedOn").is(filter.getUpdatedOnEq())));
-        if (filter.getUpdatedOnGt() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("updatedOn").gt(filter.getUpdatedOnGt())));
-        if (filter.getUpdatedOnLt() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("updatedOn").lt(filter.getUpdatedOnLt())));
-        if (filter.getUpdatedOnGoE() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("updatedOn").gte(filter.getUpdatedOnGoE())));
-        if (filter.getUpdatedOnLoE() != null)
-            aggregationOperations.add(Aggregation.match(Criteria.where("updatedOn").lte(filter.getUpdatedOnLoE())));
+        if (Objects.nonNull(filter.getCreatedOnEq()))
+            query = query.where(entity.createdOn.eq(filter.getCreatedOnEq()));
+        if (Objects.nonNull(filter.getCreatedOnGoE()))
+            query = query.where(entity.createdOn.goe(filter.getCreatedOnGoE()));
+        if (Objects.nonNull(filter.getCreatedOnLoE()))
+            query = query.where(entity.createdOn.loe(filter.getCreatedOnLoE()));
+        if (Objects.nonNull(filter.getCreatedOnGt()))
+            query = query.where(entity.createdOn.gt(filter.getCreatedOnGt()));
+        if (Objects.nonNull(filter.getCreatedOnLt()))
+            query = query.where(entity.createdOn.lt(filter.getCreatedOnLt()));
 
-        if (filter.getLimit() != null)
-            aggregationOperations.add(Aggregation.limit(filter.getLimit()));
+        if (Objects.nonNull(filter.getUpdatedOnEq()))
+            query = query.where(entity.updatedOn.eq(filter.getCreatedOnEq()));
+        if (Objects.nonNull(filter.getUpdatedOnGoE()))
+            query = query.where(entity.updatedOn.goe(filter.getCreatedOnGoE()));
+        if (Objects.nonNull(filter.getUpdatedOnLoE()))
+            query = query.where(entity.updatedOn.loe(filter.getCreatedOnLoE()));
+        if (Objects.nonNull(filter.getUpdatedOnGt()))
+            query = query.where(entity.updatedOn.gt(filter.getCreatedOnGt()));
+        if (Objects.nonNull(filter.getUpdatedOnLt()))
+            query = query.where(entity.updatedOn.lt(filter.getCreatedOnLt()));
 
-        return aggregationOperations;
-    }*/
+        if (Objects.nonNull(filter.getLimit()))
+            query = query.limit(filter.getLimit());
 
-
-    /*private List<AggregationOperation> buildQueryForSortAndFilter(Filter filter, Sort sort) {
-        List<AggregationOperation> aggregationOperations = null;
-        if (filter != null)
-            aggregationOperations = this.buildQueryForFilter(filter);
-        if (sort != null) {
-            if (aggregationOperations == null)
-                aggregationOperations = new ArrayList<>();
-
-            aggregationOperations.add(Aggregation.sort(sort));
-        }
-
-
-        return aggregationOperations == null ? new ArrayList<>() : aggregationOperations;
-    }*/
+        return query;
+    }
 }

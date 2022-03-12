@@ -27,6 +27,6 @@ public class BaseFilter {
     private LocalDateTime updatedOnGoE;
     private LocalDateTime updatedOnLoE;
 
-    private Integer limit;
+    private Long limit;
 
 }

@@ -13,7 +13,7 @@ public interface IBaseCustomRepository<Model extends BaseModel, Filter extends B
 
     Flux<Model> queryForFilterAndSort(Filter filter, Sort sort);
 
-    Mono<Page<Model>> queryForFilterPageable(Filter filter, Pageable pageable);
+    Flux<Model> queryForFilterPageable(Filter filter, Pageable pageable);
 
     Class<Model> getClassFromLookup();
 }

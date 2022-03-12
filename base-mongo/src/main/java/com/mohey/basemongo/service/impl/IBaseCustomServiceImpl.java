@@ -40,7 +40,7 @@ public abstract class IBaseCustomServiceImpl<
     }
 
     @Override
-    public Mono<Page<Model>> findAllByFilterPageable(Filter filter, Pageable pageable) {
+    public Flux<Model> findAllByFilterPageable(Filter filter, Pageable pageable) {
         return this.customRepository.queryForFilterPageable(filter, pageable);
     }
 }

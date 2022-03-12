@@ -6,17 +6,13 @@ import com.mohey.commonmodel.repositories.IBaseCustomRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.repository.support.ReactiveQuerydslMongoPredicateExecutor;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +41,10 @@ public abstract class IBaseCustomRepositoryImpl<Model extends BaseModel, Filter 
     }
 
     @Override
-    public Mono<Page<Model>> queryForFilterPageable(Filter filter, Pageable pageable) {
-        List<AggregationOperation> countOperations = this.buildQueryForFilter(filter);
-        countOperations.add(Aggregation.group("_id").count().as("count"));
-        return Mono.zip(this.reactiveMongoTemplate.aggregateAndReturn(this.getClassFromLookup())
-                                .by(Aggregation.newAggregation(this.getClassFromLookup(),this.buildQueryForFilterPageable(filter, pageable)))
-                                .all().collectList(),
-                        this.reactiveMongoTemplate.aggregate(Aggregation.newAggregation(this.getClassFromLookup(), countOperations), this.getClassFromLookup(), Long.class).next())
-                .map(objects -> new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
+    public Flux<Model> queryForFilterPageable(Filter filter, Pageable pageable) {
+        return this.reactiveMongoTemplate.aggregateAndReturn(this.getClassFromLookup())
+                .by(Aggregation.newAggregation(this.getClassFromLookup(), this.buildQueryForFilterPageable(filter, pageable)))
+                .all();
     }
 
     private List<AggregationOperation> buildQueryForFilterPageable(Filter filter, Pageable pageable) {

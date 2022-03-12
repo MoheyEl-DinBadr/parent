@@ -16,5 +16,5 @@ public interface IBaseCustomService<Model extends BaseModel, Filter extends Base
 
     Flux<Model> FindAllByFilterSorted(Filter filter, Sort sort);
 
-    Mono<Page<Model>> findAllByFilterPageable(Filter filter, Pageable pageable);
+    Flux<Model> findAllByFilterPageable(Filter filter, Pageable pageable);
 }

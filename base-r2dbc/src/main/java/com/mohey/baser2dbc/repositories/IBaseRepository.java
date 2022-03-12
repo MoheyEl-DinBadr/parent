@@ -2,7 +2,6 @@ package com.mohey.baser2dbc.repositories;
 
 import com.infobip.spring.data.r2dbc.QuerydslR2dbcFragment;
 import com.mohey.baser2dbc.model.BaseSQLModel;
-import com.mohey.commonmodel.model.BaseModel;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;

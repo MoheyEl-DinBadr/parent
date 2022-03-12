@@ -29,11 +29,6 @@
             <artifactId>common-model</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-mongodb</artifactId>
-            <version>5.0.0</version>
-        </dependency>
     </dependencies>
 
     <build>

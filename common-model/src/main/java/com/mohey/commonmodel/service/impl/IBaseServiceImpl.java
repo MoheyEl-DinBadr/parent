@@ -1,8 +1,8 @@
-package com.mohey.basemongo.service.impl;
+package com.mohey.commonmodel.service.impl;
 
-import com.mohey.basemongo.repositories.IBaseRepository;
 import com.mohey.commonmodel.model.BaseModel;
 import com.mohey.commonmodel.model.mapper.ModelMapper;
+import com.mohey.commonmodel.repositories.IBaseRepository;
 import com.mohey.commonmodel.service.IBaseService;
 import com.mohey.commonmodel.service.ReactiveConverter;
 import lombok.Data;
@@ -16,6 +16,7 @@ import reactor.util.function.Tuple2;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public abstract class IBaseServiceImpl<Model extends BaseModel,
@@ -32,7 +33,7 @@ public abstract class IBaseServiceImpl<Model extends BaseModel,
 
 
     @Override
-    public Mono<Model> findById(String id) {
+    public Mono<Model> findById(UUID id) {
         return this.repository.findById(id);
     }
 
@@ -51,7 +52,7 @@ public abstract class IBaseServiceImpl<Model extends BaseModel,
     }
 
     @Override
-    public Flux<Model> fetchAllByIds(List<String> ids) {
+    public Flux<Model> fetchAllByIds(List<UUID> ids) {
         return this.repository.findAllById(ids);
     }
 
@@ -99,14 +100,14 @@ public abstract class IBaseServiceImpl<Model extends BaseModel,
 
     @Override
     @Transactional
-    public Mono<Model> deleteOneById(String id) {
+    public Mono<Model> deleteOneById(UUID id) {
         return this.findById(id)
                 .flatMap(this::deleteOne);
     }
 
     @Override
     @Transactional
-    public Mono<Model> updateOne(String id, Model model) {
+    public Mono<Model> updateOne(UUID id, Model model) {
         return this.findById(id)
                 .map(toUpdate -> {
                             this.modelMapper.updateModel(model, toUpdate);

@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.UUID;
 
 
 public abstract class BaseController<Model extends BaseModel,
@@ -29,7 +30,7 @@ public abstract class BaseController<Model extends BaseModel,
     }
 
     @GetMapping("/{id}")
-    public Mono<ModelDto> getOneById(@PathVariable String id) {
+    public Mono<ModelDto> getOneById(@PathVariable UUID id) {
         return this.service.findById(id)
                 .flatMap(this::manipulateModelBeforeBecomingDto);
     }
@@ -53,7 +54,7 @@ public abstract class BaseController<Model extends BaseModel,
     }
 
     @PutMapping("/{id}")
-    public Mono<ModelDto> updateOne(@PathVariable String id, @RequestBody ModelUpdateDto updateDto) {
+    public Mono<ModelDto> updateOne(@PathVariable UUID id, @RequestBody ModelUpdateDto updateDto) {
         return this.manipulateUpdateDtoBeforeBecomingModel(updateDto)
                 .flatMap(model -> this.service.updateOne(id, model))
                 .flatMap(this::manipulateModelBeforeBecomingDto);
@@ -67,7 +68,7 @@ public abstract class BaseController<Model extends BaseModel,
     }
 
     @DeleteMapping("/{id}")
-    public Mono<ModelDto> deleteOneById(@PathVariable String id) {
+    public Mono<ModelDto> deleteOneById(@PathVariable UUID id) {
         return this.service.deleteOneById(id)
                 .flatMap(this::manipulateModelBeforeBecomingDto);
     }

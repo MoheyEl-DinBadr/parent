@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @Data
 @Slf4j
-public abstract class IBaseCustomRepositoryImpl<Model extends BaseSQLModel, Filter extends BaseFilter, BaseRepository extends IBaseRepository<Model>>
+public abstract class IBaseCustomRepositoryImpl<Model extends BaseSQLModel, Filter extends BaseFilter, BaseRepository extends IBaseSQLRepository<Model>>
         implements IBaseCustomRepository<Model, Filter> {
 
     @Autowired

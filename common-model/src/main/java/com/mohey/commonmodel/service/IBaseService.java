@@ -7,17 +7,18 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.UUID;
 
 
 public interface IBaseService<Model extends BaseModel> {
 
-    Mono<Model> findById(String id);
+    Mono<Model> findById(UUID id);
 
     Mono<Model> addOne(Model model);
 
     Flux<Model> findAll();
 
-    Flux<Model> fetchAllByIds(List<String> ids);
+    Flux<Model> fetchAllByIds(List<UUID> ids);
 
     Flux<Model> findAllSorted(Sort sort);
 
@@ -29,9 +30,9 @@ public interface IBaseService<Model extends BaseModel> {
 
     Mono<Model> deleteOne(Model model);
 
-    Mono<Model> deleteOneById(String id);
+    Mono<Model> deleteOneById(UUID id);
 
-    Mono<Model> updateOne(String id, Model model);
+    Mono<Model> updateOne(UUID id, Model model);
 
     Mono<Model> doBeforeUpdate(Model model);
 

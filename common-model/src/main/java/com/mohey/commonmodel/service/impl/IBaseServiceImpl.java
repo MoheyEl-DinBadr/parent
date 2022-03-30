@@ -69,9 +69,10 @@ public abstract class IBaseServiceImpl<Model extends BaseModel,
     @Override
     @Transactional
     public Flux<Model> addMany(Flux<Model> models) {
-        return this.repository.saveAll(models.subscribeOn(Schedulers.boundedElastic())
-                        .flatMap(model -> Mono.zip(this.doBeforeAddOrUpdate(model), this.doAfterAdd(model))
-                                .flatMap(objects -> this.beforeSaveValidations(model, true)).thenReturn(model))
+        return this.repository.saveAll(
+                        models.subscribeOn(Schedulers.boundedElastic())
+                                .flatMap(model -> Mono.zip(this.doBeforeAddOrUpdate(model), this.doAfterAdd(model)))
+                                .flatMap(objects -> this.beforeSaveValidations(objects.getT1(), true))
                 )
                 .flatMap(model -> Mono.zip(this.doAfterAdd(model), this.doAfterAddOrUpdate(model))
                         .thenReturn(model)
@@ -81,9 +82,10 @@ public abstract class IBaseServiceImpl<Model extends BaseModel,
     @Override
     @Transactional
     public Flux<Model> updateMany(Flux<Model> models) {
-        return this.repository.saveAll(models.subscribeOn(Schedulers.boundedElastic())
-                        .flatMap(model -> Mono.zip(this.doBeforeAddOrUpdate(model), this.doBeforeUpdate(model))
-                                .flatMap(objects -> this.beforeSaveValidations(model, false).thenReturn(model)))
+        return this.repository.saveAll(
+                        models.subscribeOn(Schedulers.boundedElastic())
+                                .flatMap(model -> Mono.zip(this.doBeforeAddOrUpdate(model), this.doBeforeUpdate(model)))
+                                .flatMap(objects -> this.beforeSaveValidations(objects.getT1(), false))
                 )
                 .flatMap(model -> Mono.zip(this.doAfterAddOrUpdate(model), this.doBeforeUpdate(model))
                         .thenReturn(model)

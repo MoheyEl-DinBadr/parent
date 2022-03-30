@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 @Aspect
 @Component
 @AllArgsConstructor
-public class ScopeHandler {
+public class UserScopeHandler {
 
 
     @Around("@annotation(com.mohey.resourceserver.annotations.UserScope)")

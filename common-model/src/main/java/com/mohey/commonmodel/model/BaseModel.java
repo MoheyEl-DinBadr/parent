@@ -1,6 +1,7 @@
 package com.mohey.commonmodel.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode
 public class BaseModel implements Serializable {
 
     @Id

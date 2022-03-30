@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
 import java.util.UUID;
 
 @NoRepositoryBean
-public interface IBaseRepository <Model extends BaseModel> extends
-         ReactiveSortingRepository<Model, UUID>, ReactiveQueryByExampleExecutor<Model> {
+public interface IBaseRepository<Model extends BaseModel> extends
+        ReactiveSortingRepository<Model, UUID>, ReactiveQueryByExampleExecutor<Model> {
     Flux<Model> findByIdNotNull(Pageable pageable);
 }

@@ -42,7 +42,7 @@ class IBaseCustomRepositoryImplTest {
         mockClass1 = this.reactiveMongoTemplate.insert(mockClass1).block();
         var mockClass2 = new MockClass();
         mockClass2.setData("Test2");
-       mockClass2 = this.reactiveMongoTemplate.insert(mockClass2).block();
+        mockClass2 = this.reactiveMongoTemplate.insert(mockClass2).block();
         var mockClass3 = new MockClass();
         mockClass3.setData("Test3");
         mockClass3 = this.reactiveMongoTemplate.insert(mockClass3).block();

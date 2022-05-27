@@ -7,6 +7,7 @@ import com.mohey.commonmodel.repositories.IBaseCustomRepository;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.SQLQuery;
 import lombok.Data;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.relational.core.query.Query;
+import org.springframework.r2dbc.core.DatabaseClient;
 import reactor.core.publisher.Flux;
 
 import java.util.Objects;
@@ -25,16 +28,12 @@ public abstract class IBaseCustomRepositoryImpl<Model extends BaseSQLModel, Filt
         implements IBaseCustomRepository<Model, Filter> {
 
     @Autowired
-    public BaseRepository repository;
-
-    public <S extends QBaseSQLModel> S getPathToEntity() {
-        return (S) QBaseSQLModel.baseSQLModel;
-    }
+    protected BaseRepository repository;
 
 
     @Override
     public Flux<Model> queryForFilter(Filter filter) {
-        return this.repository.query(sqlQuery -> this.buildQueryForFilter(filter, sqlQuery)).all().cast(this.getClassFromLookup());
+        return this.repository.findBy(this.buildQueryForFilter(filter), reactiveFluentQuery -> reactiveFluentQuery.).all().cast(this.getClassFromLookup());
     }
 
     @Override
@@ -67,11 +66,10 @@ public abstract class IBaseCustomRepositoryImpl<Model extends BaseSQLModel, Filt
         return query;
     }
 
-    protected <E> SQLQuery<E> buildQueryForFilter(Filter filter, SQLQuery<E> query) {
+    protected Predicate buildQueryForFilter(Filter filter) {
         var entity = QBaseSQLModel.baseSQLModel;
-
         if (Objects.nonNull(filter.getId()))
-            query = query.where(entity.id.eq(filter.getId()));
+            entity = entity.id.eq(filter.getId());
         if (Objects.nonNull(filter.getIncludedIds()))
             query = query.where(entity.id.in(filter.getIncludedIds()));
         if (Objects.nonNull(filter.getExcludedIds()))

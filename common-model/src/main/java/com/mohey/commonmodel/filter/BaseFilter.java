@@ -1,5 +1,6 @@
 package com.mohey.commonmodel.filter;
 
+import com.mohey.commonmodel.model.BaseModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-public class BaseFilter {
+public class BaseFilter extends BaseModel {
     private UUID id;
     private List<UUID> excludedIds;
     private List<UUID> includedIds;
@@ -26,6 +27,8 @@ public class BaseFilter {
     private LocalDateTime updatedOnLt;
     private LocalDateTime updatedOnGoE;
     private LocalDateTime updatedOnLoE;
+
+    private Long startIndex;
 
     private Long limit;
 

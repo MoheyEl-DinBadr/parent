@@ -2,7 +2,7 @@ package com.mohey.basemongo;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class BaseModuleApplicationTests {
 
     /*@Test

@@ -6,9 +6,8 @@
         <groupId>com.mohey</groupId>
         <artifactId>parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.mohey</groupId>
     <artifactId>resource-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>resource-server</name>
@@ -16,7 +15,8 @@
     <properties>
         <java.version>17</java.version>
         <repackage.classifier/>
-        <spring-native.version>0.12.1</spring-native.version>
+        <spring-native.version>0.11.3</spring-native.version>
+        <native-buildtools.version>0.9.11</native-buildtools.version>
     </properties>
     <dependencies>
         <dependency>
@@ -35,6 +35,15 @@
             <groupId>org.springframework.experimental</groupId>
             <artifactId>spring-native</artifactId>
             <version>${spring-native.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -127,7 +136,7 @@
             <id>native</id>
             <properties>
                 <repackage.classifier>exec</repackage.classifier>
-                <native-buildtools.version>0.9.13</native-buildtools.version>
+                <native-buildtools.version>0.9.10</native-buildtools.version>
             </properties>
             <dependencies>
                 <dependency>

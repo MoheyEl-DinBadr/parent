@@ -8,10 +8,10 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>base-module</artifactId>
+    <artifactId>base-mongo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>base-mongo</name>
-    <description>base-module</description>
+    <description>base-mongo</description>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -27,6 +27,10 @@
             <groupId>com.mohey</groupId>
             <artifactId>common-model</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
     </dependencies>
 

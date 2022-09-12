@@ -17,7 +17,7 @@
     <properties>
         <java.version>17</java.version>
         <infobip.version>7.2.0</infobip.version>
-        <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <mapstruct.version>1.5.2.Final</mapstruct.version>
         <lombok.version>1.18.24</lombok.version>
         <spring-boot.version>2.7.3</spring-boot.version>
         <spring-tx.version>5.3.22</spring-tx.version>

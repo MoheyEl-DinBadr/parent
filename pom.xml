@@ -20,7 +20,7 @@
         <mapstruct.version>1.5.2.Final</mapstruct.version>
         <lombok.version>1.18.24</lombok.version>
         <spring-boot.version>2.7.3</spring-boot.version>
-        <spring-tx.version>5.3.22</spring-tx.version>
+        <spring-tx.version>5.3.23</spring-tx.version>
         <native-buildtools.version>0.9.11</native-buildtools.version>
     </properties>
     <dependencyManagement>

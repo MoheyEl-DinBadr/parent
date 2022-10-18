@@ -48,7 +48,7 @@ public class LoggerFilter implements WebFilter {
         return exchange.getSession().doOnNext(session -> {
                     var creationTime = session.getCreationTime().toString();
                     log.info(new LogModel()
-                            .setSessionId(transactionId.get())
+                            .setTransactionId(transactionId.get())
                             .setType(LogType.IN_BOUND)
                             .setTime(creationTime)
                             .setServiceName(serviceName)
@@ -70,7 +70,7 @@ public class LoggerFilter implements WebFilter {
                     var headers = response.getHeaders();
                     var statusCode = response.getRawStatusCode();
                     log.info(new LogModel()
-                            .setSessionId(transactionId.get())
+                            .setTransactionId(transactionId.get())
                             .setTime(Instant.now().toString())
                             .setStatusCode(statusCode)
                             .setHeaders(headers)

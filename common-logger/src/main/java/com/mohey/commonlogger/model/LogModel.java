@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class LogModel {
-    protected String sessionId;
+    protected String transactionId;
     protected LogType type;
     protected String time;
     protected String serviceName;
@@ -12,11 +12,10 @@ public class LogModel {
     protected String remoteAddress;
     protected Object headers;
     protected Integer statusCode;
-
     protected String method;
 
-    public LogModel setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public LogModel setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
         return this;
     }
 
@@ -63,15 +62,15 @@ public class LogModel {
     @Override
     public String toString() {
         return "LogModel{" +
-                "sessionId='" + sessionId + '\'' +
+                "sessionId='" + transactionId + '\'' +
                 ", type=" + type +
                 ", time='" + time + '\'' +
                 ", serviceName='" + serviceName + '\'' +
+                ", method='" + method + '\'' +
                 ", path='" + path + '\'' +
                 ", remoteAddress='" + remoteAddress + '\'' +
                 ", headers=" + headers +
                 ", statusCode=" + statusCode +
-                ", method='" + method + '\'' +
                 '}';
     }
 }

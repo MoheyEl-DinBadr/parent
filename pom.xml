@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.6</version>
+        <version>3.0.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.mohey</groupId>
@@ -20,9 +20,10 @@
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <lombok.version>1.18.24</lombok.version>
         <spring-boot.version>3.0.2</spring-boot.version>
-        <spring-tx.version>6.0.4</spring-tx.version>
+        <spring-tx.version>6.0.8</spring-tx.version>
         <spring-data-commons.version>3.0.1</spring-data-commons.version>
         <mongo-embedded.version>4.4.0</mongo-embedded.version>
+        <native-buildtools.version>0.9.11</native-buildtools.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -89,7 +90,7 @@
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-commons</artifactId>
-                <version>${spring-data-commons.version}</version>
+                <version>${spring-boot.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
             <dependency>

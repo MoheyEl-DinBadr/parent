@@ -41,7 +41,7 @@ public class LoggerFilter implements WebFilter {
             Optional.ofNullable(req.getRemoteAddress())
                     .ifPresent(address -> remoteAddress.set(address.toString()));
             headers.set(req.getHeaders());
-            method.set(req.getMethodValue());
+            method.set(req.getMethod().toString());
             transactionId.set(headers.get().containsKey(Constants.TRANSACTION_ID) ? Objects.requireNonNull(headers.get().get(Constants.TRANSACTION_ID)).toString() : UUID.randomUUID().toString());
         });
 
@@ -68,7 +68,7 @@ public class LoggerFilter implements WebFilter {
                 .flatMap(session -> {
                     var response = exchange.getResponse();
                     var headers = response.getHeaders();
-                    var statusCode = response.getRawStatusCode();
+                    var statusCode = response.getStatusCode().value();
                     log.info(new LogModel()
                             .setTransactionId(transactionId.get())
                             .setTime(Instant.now().toString())

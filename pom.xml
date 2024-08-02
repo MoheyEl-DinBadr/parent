@@ -19,7 +19,7 @@
         <infobip.version>8.1.2</infobip.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
-        <spring-boot.version>3.0.2</spring-boot.version>
+        <spring-boot.version>3.3.1</spring-boot.version>
         <spring-tx.version>6.0.8</spring-tx.version>
         <spring-data-commons.version>3.0.1</spring-data-commons.version>
         <mongo-embedded.version>4.4.0</mongo-embedded.version>
